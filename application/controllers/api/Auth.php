@@ -24,4 +24,22 @@ class Auth extends CI_Controller{
         $msg['response'] = $this->auth->registerUser($input);
         echo json_encode($msg);
     }
+    public function userVerification(){
+        $input['user_email'] = $this->input->post("email");
+        $input['otp_value'] = $this->input->post("otp");
+        $msg['response'] = $this->auth->verifyEmail($input);
+        echo json_encode($msg);
+    }
+    public function generateOTP(){
+        $input['user_email'] = $this->input->post("email");
+        $msg['response'] = $this->auth->addOtp($input);
+        echo json_encode($msg);
+    }
+    public function forgetPassword(){
+        $input['otp'] = $this->input->post('otp');
+        $input['email'] = $this->input->post('email');
+        $input['password'] = md5($this->input->post("password"));
+        $msg['response'] = $this->auth->otpVerification($input);
+        echo json_encode($msg);
+    }
 }
