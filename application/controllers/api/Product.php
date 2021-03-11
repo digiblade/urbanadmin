@@ -32,6 +32,31 @@ class Product extends CI_Controller{
             
         }
         echo json_encode($msg);
-      
+    }
+   
+    public function allSubCategory(){
+        $data['products'] = $this->product->getAllSubCategory();
+        echo json_encode($data);
+    }
+    public function addSubCategory(){
+        $msg['response'] = false;
+        $msg['error'] = "Nothing";
+        $config['upload_path'] = './assets/subcategory/';
+        $config['allowed_types'] =  'png|jpg|jpeg|PNG|JPG|JPEG';
+        $this->load->library('upload',$config);
+        if(!$this->upload->do_upload('image')){
+            $msg['error'] = $this->upload->display_errors();
+        }else{
+            $data = $this->upload->data();
+            $imagename = $data['raw_name'].$data['file_ext'];
+            $input['subcategory_name'] = $this->input->post("subcategory") ;
+            $input['subcategory_description'] = $this->input->post("description");
+            $input['subcategory_image'] = base_url().'assets/subcategory/'.$imagename;
+            $input['subcategory_status'] = 1;
+            $input['subcategory_creation'] = date("d/m/Y");
+            $input['category_id'] = $this->input->post("categoryid");
+            $msg['response']=$this->product->addSubCategory($input);   
+        }
+        echo json_encode($msg);
     }
 }
